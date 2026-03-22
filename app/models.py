@@ -37,7 +37,10 @@ class Contact(Base):
     __tablename__ = "contact"
 
     id = Column(String, primary_key=True, default=gen_id)
-    name = Column(String)
+
+    first_name = Column(String)
+    last_name = Column(String)
+
     headline = Column(String)
     profile_url = Column(String, unique=True, index=True)
 

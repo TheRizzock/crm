@@ -33,7 +33,8 @@ def create_lead(payload: schemas.LeadCreate, db: Session = Depends(get_db)):
         return {"status": "exists"}
 
     contact = models.Contact(
-        name=payload.name,
+        first_name=payload.first_name,
+        last_name=payload.last_name,
         headline=payload.headline,
         profile_url=payload.profileUrl,
         company_id=company.id,
