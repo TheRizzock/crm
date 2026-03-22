@@ -30,7 +30,7 @@ class Company(Base):
     company_size = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    contact = relationship("Contact", back_populates="company")
+    contacts = relationship("Contact", back_populates="company")
 
 
 class Contact(Base):
