@@ -16,31 +16,39 @@ def get_db():
 
 @router.post("/")
 def create_lead(payload: schemas.LeadCreate, db: Session = Depends(get_db)):
+    print("PAYLOAD:", payload)
 
-    # get or create company
-    company = db.query(models.Company).filter_by(name=payload.company).first()
+    try:
+        company = db.query(models.Company).filter_by(name=payload.company).first()
 
-    if not company:
-        company = models.Company(name=payload.company)
-        db.add(company)
+        if not company:
+            company = models.Company(name=payload.company)
+            db.add(company)
+            db.commit()
+            db.refresh(company)
+
+        existing = db.query(models.Contact).filter_by(profile_url=payload.profileUrl).first()
+
+        if existing:
+            return {"status": "exists"}
+
+        contact = models.Contact(
+            first_name=payload.first_name,
+            last_name=payload.last_name,
+            headline=payload.headline,
+            profile_url=payload.profileUrl,
+            company_id=company.id,
+        )
+
+        db.add(contact)
         db.commit()
-        db.refresh(company)
+        db.refresh(contact)
 
-    # dedupe contact
-    existing = db.query(models.Contact).filter_by(profile_url=payload.profileUrl).first()
+        print("CREATED:", contact.id)
 
-    if existing:
-        return {"status": "exists"}
+        return {"status": "created"}
 
-    contact = models.Contact(
-        first_name=payload.first_name,
-        last_name=payload.last_name,
-        headline=payload.headline,
-        profile_url=payload.profileUrl,
-        company_id=company.id,
-    )
-
-    db.add(contact)
-    db.commit()
-
-    return {"status": "created"}
+    except Exception as e:
+        print("ERROR:", e)
+        db.rollback()
+        return {"status": "error", "detail": str(e)}
