@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-app = FastAPI()
+router = FastAPI()
 
 # Allow your static site to hit this endpoint
 # app.add_middleware(
@@ -19,7 +19,7 @@ app = FastAPI()
 resend.api_key = os.getenv("RESEND_API_KEY")
 
 
-@app.post("/contact")
+@router.post("/contact")
 async def contact(
     name: str = Form(...),
     email: str = Form(...),
