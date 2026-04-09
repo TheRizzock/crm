@@ -1,12 +1,12 @@
 import os
-from fastapi import FastAPI, Form, HTTPException
+from fastapi import APIRouter, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import resend
 from dotenv import load_dotenv
 
 load_dotenv()
 
-router = FastAPI()
+router = APIRouter()
 
 # Allow your static site to hit this endpoint
 # app.add_middleware(
