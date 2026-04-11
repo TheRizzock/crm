@@ -11,8 +11,10 @@ app.add_middleware(
     allow_origins=[
         "chrome-extension://oeeefeaddefcngbljhjcjmjlfgkloojn",
         "http://localhost:63343/",
-        "https://dankowalsky.com",  # replace
-        "https://www.dankowalsky.com"  # replace
+        "https://dankowalsky.com",
+        "https://www.dankowalsky.com",
+        "https://routebase.co",
+        "https://www.routebase.co"
     ],
     allow_credentials=True,
     allow_methods=["*"],

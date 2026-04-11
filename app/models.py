@@ -62,3 +62,12 @@ class Activity(Base):
     contact = relationship("Contact", back_populates="activities")
 
 
+class EmailCapture(Base):
+    __tablename__ = "email_capture"
+
+    id = Column(String, primary_key=True, default=gen_id)
+    email = Column(String, index=True)
+    resource = Column(String, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+

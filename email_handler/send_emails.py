@@ -27,4 +27,4 @@ def send_template_email(template, first_name, email_address):
     resend.Emails.send(params)
 
 if __name__ == "__main__":
-    send_template_email("90376431-09d5-4e5d-8981-24a072db23f5", "Mac", "dkowalsky7@gmail.com")
+    send_template_email("90376431-09d5-4e5d-8981-24a072db23f5", "Mac", "dankowalsky@mixstir.ai")

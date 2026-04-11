@@ -1,12 +1,23 @@
 import os
-from fastapi import APIRouter, Form, HTTPException
+from fastapi import APIRouter, Form, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
 import resend
 from dotenv import load_dotenv
+from app.db import SessionLocal
+from app.models import EmailCapture
 
 load_dotenv()
 
 router = APIRouter()
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 # Allow your static site to hit this endpoint
 # app.add_middleware(
@@ -49,3 +60,15 @@ async def contact(
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail="Email failed to send")
+
+
+@router.post("/collect")
+async def collect(
+    email: str = Form(...),
+    resource: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    entry = EmailCapture(email=email, resource=resource)
+    db.add(entry)
+    db.commit()
+    return {"success": True}
