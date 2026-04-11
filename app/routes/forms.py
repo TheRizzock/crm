@@ -68,7 +68,10 @@ async def collect(
     resource: str = Form(...),
     db: Session = Depends(get_db)
 ):
-    entry = EmailCapture(email=email, resource=resource)
-    db.add(entry)
+    exists = db.query(EmailCapture).filter_by(email=email, resource=resource).first()
+    if exists:
+        return {"success": True}
+
+    db.add(EmailCapture(email=email, resource=resource))
     db.commit()
     return {"success": True}
