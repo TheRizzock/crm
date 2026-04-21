@@ -1,1 +1,11 @@
 .env
+.cli_config.json
+.cli_state.json
+__pycache__/
+*.pyc
+*.pyo
+.idea/
+*.egg-info/
+dist/
+build/
+data/raw_leads

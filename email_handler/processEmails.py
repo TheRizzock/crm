@@ -71,11 +71,17 @@ def is_valid_email(email):
     return True
 
 
+SKIP_STATUSES = {"sent", "delivered", "bounced", "skipped"}
+
+
 def process_apify_leads(filename):
     with open(filename) as contact_data:
         contact_data = json.load(contact_data)
 
     for contact in contact_data:
+        if contact.get("send_status") in SKIP_STATUSES:
+            continue
+
         email = contact.get("email")
         first_name = contact.get("first_name", "")
 
