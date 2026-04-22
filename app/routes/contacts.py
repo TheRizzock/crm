@@ -7,7 +7,7 @@ import math
 
 from app.db import SessionLocal
 from app.models import Contact, Activity, Company
-from app.schemas import ContactSummary, ContactListResponse, ActivitySummary
+from app.schemas import ContactSummary, ContactListResponse, ActivitySummary, ActivityCreate
 
 
 def get_db():
@@ -141,10 +141,44 @@ def get_contact_activities(contact_id: str, db: Session = Depends(get_db)):
     if not contact:
         raise HTTPException(status_code=404, detail="Contact not found")
 
-    activities = (
+    return (
         db.query(Activity)
         .filter(Activity.contact_id == contact_id)
         .order_by(desc(Activity.created_at))
         .all()
     )
-    return activities
+
+
+@router.post("/{contact_id}/activities", response_model=ActivitySummary, status_code=201)
+def create_activity(contact_id: str, payload: ActivityCreate, db: Session = Depends(get_db)):
+    contact = db.query(Contact).filter(Contact.id == contact_id).first()
+    if not contact:
+        raise HTTPException(status_code=404, detail="Contact not found")
+
+    activity = Activity(
+        contact_id=contact_id,
+        type=payload.type,
+        subject=payload.subject,
+        body=payload.body,
+        status=payload.status,
+        resend_id=payload.resend_id,
+        created_at=payload.created_at or datetime.utcnow(),
+    )
+    db.add(activity)
+    db.commit()
+    db.refresh(activity)
+    return activity
+
+
+@router.delete("/{contact_id}/activities/{activity_id}", status_code=204)
+def delete_activity(contact_id: str, activity_id: str, db: Session = Depends(get_db)):
+    activity = (
+        db.query(Activity)
+        .filter(Activity.id == activity_id, Activity.contact_id == contact_id)
+        .first()
+    )
+    if not activity:
+        raise HTTPException(status_code=404, detail="Activity not found")
+
+    db.delete(activity)
+    db.commit()

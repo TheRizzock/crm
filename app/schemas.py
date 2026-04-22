@@ -41,6 +41,15 @@ class ContactListResponse(BaseModel):
     items: list[ContactSummary]
 
 
+class ActivityCreate(BaseModel):
+    type: str
+    subject: Optional[str] = None
+    body: Optional[str] = None
+    status: Optional[str] = None
+    resend_id: Optional[str] = None
+    created_at: Optional[datetime] = None
+
+
 class ActivitySummary(BaseModel):
     id: str
     type: Optional[str]
