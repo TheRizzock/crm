@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import func, exists, asc, desc
 from datetime import datetime, timedelta, date
@@ -7,7 +7,7 @@ import math
 
 from app.db import SessionLocal
 from app.models import Contact, Activity, Company
-from app.schemas import ContactSummary, ContactListResponse
+from app.schemas import ContactSummary, ContactListResponse, ActivitySummary
 
 
 def get_db():
@@ -111,6 +111,8 @@ def list_contacts(
             first_name=contact.first_name,
             last_name=contact.last_name,
             email=contact.email,
+            profile_url=contact.profile_url,
+            mobile_number=contact.mobile_number,
             job_title=contact.job_title,
             headline=contact.headline,
             industry=contact.industry,
@@ -131,3 +133,18 @@ def list_contacts(
         pages=math.ceil(total / page_size) if total else 0,
         items=items,
     )
+
+
+@router.get("/{contact_id}/activities", response_model=list[ActivitySummary])
+def get_contact_activities(contact_id: str, db: Session = Depends(get_db)):
+    contact = db.query(Contact).filter(Contact.id == contact_id).first()
+    if not contact:
+        raise HTTPException(status_code=404, detail="Contact not found")
+
+    activities = (
+        db.query(Activity)
+        .filter(Activity.contact_id == contact_id)
+        .order_by(desc(Activity.created_at))
+        .all()
+    )
+    return activities

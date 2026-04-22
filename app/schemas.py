@@ -16,6 +16,8 @@ class ContactSummary(BaseModel):
     first_name: Optional[str]
     last_name: Optional[str]
     email: Optional[str]
+    mobile_number: Optional[str]
+    profile_url: Optional[str]
     job_title: Optional[str]
     headline: Optional[str]
     industry: Optional[str]
@@ -37,3 +39,15 @@ class ContactListResponse(BaseModel):
     page_size: int
     pages: int
     items: list[ContactSummary]
+
+
+class ActivitySummary(BaseModel):
+    id: str
+    type: Optional[str]
+    subject: Optional[str]
+    body: Optional[str]
+    status: Optional[str]
+    resend_id: Optional[str]
+    created_at: Optional[datetime]
+
+    model_config = {"from_attributes": True}
