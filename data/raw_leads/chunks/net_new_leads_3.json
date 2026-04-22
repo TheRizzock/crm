@@ -35,7 +35,8 @@
     "company_state": "Connecticut",
     "company_city": "West Hartford",
     "company_country": "United States",
-    "company_postal_code": "06117-2500"
+    "company_postal_code": "06117-2500",
+    "send_status": "sent"
   },
   {
     "first_name": "Jonathan",
@@ -73,7 +74,8 @@
     "company_state": "England",
     "company_city": null,
     "company_country": "United Kingdom",
-    "company_postal_code": "W1G 0PW"
+    "company_postal_code": "W1G 0PW",
+    "send_status": "skipped"
   },
   {
     "first_name": "Matt",
@@ -111,7 +113,8 @@
     "company_state": "Connecticut",
     "company_city": "Guilford",
     "company_country": "United States",
-    "company_postal_code": "06437"
+    "company_postal_code": "06437",
+    "send_status": "sent"
   },
   {
     "first_name": "Vincent",
@@ -149,7 +152,8 @@
     "company_state": "Massachusetts",
     "company_city": "Boston",
     "company_country": "United States",
-    "company_postal_code": "02110"
+    "company_postal_code": "02110",
+    "send_status": "sent"
   },
   {
     "first_name": "Dana",
@@ -187,7 +191,8 @@
     "company_state": "Oregon",
     "company_city": "Redmond",
     "company_country": "United States",
-    "company_postal_code": "97756-1324"
+    "company_postal_code": "97756-1324",
+    "send_status": "sent"
   },
   {
     "first_name": "Jim",
@@ -225,7 +230,8 @@
     "company_state": "Connecticut",
     "company_city": "Bridgeport",
     "company_country": "United States",
-    "company_postal_code": "06604-4700"
+    "company_postal_code": "06604-4700",
+    "send_status": "sent"
   },
   {
     "first_name": "Tim",
@@ -263,7 +269,8 @@
     "company_state": "Connecticut",
     "company_city": "Greenwich",
     "company_country": "United States",
-    "company_postal_code": "06830"
+    "company_postal_code": "06830",
+    "send_status": "delivered"
   },
   {
     "first_name": "Kelly",
@@ -301,7 +308,8 @@
     "company_state": "Connecticut",
     "company_city": "Cheshire",
     "company_country": "United States",
-    "company_postal_code": "06410"
+    "company_postal_code": "06410",
+    "send_status": "sent"
   },
   {
     "first_name": "Charles",
@@ -339,7 +347,8 @@
     "company_state": "Connecticut",
     "company_city": "West Hartford",
     "company_country": "United States",
-    "company_postal_code": "06107"
+    "company_postal_code": "06107",
+    "send_status": "skipped"
   },
   {
     "first_name": "Andrea",
@@ -377,7 +386,8 @@
     "company_state": "Connecticut",
     "company_city": "Greenwich",
     "company_country": "United States",
-    "company_postal_code": "06830-2602"
+    "company_postal_code": "06830-2602",
+    "send_status": "skipped"
   },
   {
     "first_name": "Shari",
@@ -415,7 +425,8 @@
     "company_state": "Connecticut",
     "company_city": "New Haven",
     "company_country": "United States",
-    "company_postal_code": "06510"
+    "company_postal_code": "06510",
+    "send_status": "skipped"
   },
   {
     "first_name": "Thad",
@@ -453,7 +464,8 @@
     "company_state": "Florida",
     "company_city": "Miami",
     "company_country": "United States",
-    "company_postal_code": null
+    "company_postal_code": null,
+    "send_status": "sent"
   },
   {
     "first_name": "Mary",
@@ -491,7 +503,8 @@
     "company_state": "Connecticut",
     "company_city": "Glastonbury",
     "company_country": "United States",
-    "company_postal_code": "06033"
+    "company_postal_code": "06033",
+    "send_status": "skipped"
   },
   {
     "first_name": "Kathleen",
@@ -529,7 +542,8 @@
     "company_state": "Connecticut",
     "company_city": "Farmington",
     "company_country": "United States",
-    "company_postal_code": "06032-1911"
+    "company_postal_code": "06032-1911",
+    "send_status": "sent"
   },
   {
     "first_name": "Wendy",
@@ -567,7 +581,8 @@
     "company_state": "Connecticut",
     "company_city": "Branford",
     "company_country": "United States",
-    "company_postal_code": "06405-6012"
+    "company_postal_code": "06405-6012",
+    "send_status": "sent"
   },
   {
     "first_name": "Tom",

@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from datetime import datetime
+from typing import Optional
 
 
 class LeadCreate(BaseModel):
@@ -7,3 +9,31 @@ class LeadCreate(BaseModel):
     headline: str
     company: str
     profileUrl: str
+
+
+class ContactSummary(BaseModel):
+    id: str
+    first_name: Optional[str]
+    last_name: Optional[str]
+    email: Optional[str]
+    job_title: Optional[str]
+    headline: Optional[str]
+    industry: Optional[str]
+    seniority_level: Optional[str]
+    city: Optional[str]
+    state: Optional[str]
+    country: Optional[str]
+    zb_status: Optional[str]
+    company_name: Optional[str]
+    created_at: Optional[datetime]
+    last_contacted_at: Optional[datetime]
+
+    model_config = {"from_attributes": True}
+
+
+class ContactListResponse(BaseModel):
+    total: int
+    page: int
+    page_size: int
+    pages: int
+    items: list[ContactSummary]
