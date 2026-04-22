@@ -28,11 +28,13 @@ DEFAULTS = {
     "eod_hour":     17,
     "default_tier": 1,
     "test_email":   "",
+    "subject":      "",
 }
 
 FIELD_DESCRIPTIONS = {
     "from_address":  "Sender name + email  e.g. Dan Kowalsky <dan@yourdomain.com>",
     "template_id":   "Resend template ID   e.g. 90376431-09d5-4e5d-8981-24a072db23f5",
+    "subject":       "Email subject line   e.g. Quick question (stored on activity record)",
     "test_email":    "Test recipient email e.g. you@yourdomain.com",
     "timezone":      "Scheduling timezone  e.g. America/New_York",
     "eod_hour":      "End-of-day hour (24h) e.g. 17 = 5 PM",

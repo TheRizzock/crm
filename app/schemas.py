@@ -41,6 +41,60 @@ class ContactListResponse(BaseModel):
     items: list[ContactSummary]
 
 
+class CompanySummary(BaseModel):
+    id: str
+    name: Optional[str]
+    website: Optional[str]
+    domain: Optional[str]
+    company_size: Optional[str]
+    city: Optional[str]
+    state: Optional[str]
+    country: Optional[str]
+    annual_revenue_clean: Optional[str]
+    industry: Optional[str]
+    contact_count: Optional[int]
+    created_at: Optional[datetime]
+
+    model_config = {"from_attributes": True}
+
+
+class CompanyDetail(BaseModel):
+    id: str
+    name: Optional[str]
+    profile_url: Optional[str]
+    website: Optional[str]
+    domain: Optional[str]
+    phone: Optional[str]
+    company_size: Optional[str]
+    linkedin_uid: Optional[str]
+    founded_year: Optional[str]
+    annual_revenue: Optional[str]
+    annual_revenue_clean: Optional[str]
+    total_funding: Optional[str]
+    total_funding_clean: Optional[str]
+    description: Optional[str]
+    keywords: Optional[str]
+    technologies: Optional[str]
+    street_address: Optional[str]
+    full_address: Optional[str]
+    city: Optional[str]
+    state: Optional[str]
+    country: Optional[str]
+    postal_code: Optional[str]
+    contact_count: Optional[int]
+    created_at: Optional[datetime]
+
+    model_config = {"from_attributes": True}
+
+
+class CompanyListResponse(BaseModel):
+    total: int
+    page: int
+    page_size: int
+    pages: int
+    items: list[CompanySummary]
+
+
 class ActivityCreate(BaseModel):
     type: str
     subject: Optional[str] = None
