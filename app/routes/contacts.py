@@ -22,18 +22,21 @@ router = APIRouter()
 
 
 @router.get("/count/today")
-def count_contacts_today(db: Session = Depends(get_db)):
+def count_activities_today(
+    activity_type: Optional[str] = Query(None, description="email | linkedin | phone"),
+    db: Session = Depends(get_db),
+):
     today = datetime.utcnow().date()
     tomorrow = today + timedelta(days=1)
 
-    count = (
-        db.query(func.count(Contact.id))
-        .filter(Contact.created_at >= today)
-        .filter(Contact.created_at < tomorrow)
-        .scalar()
+    q = db.query(func.count(Activity.id)).filter(
+        Activity.created_at >= today,
+        Activity.created_at < tomorrow,
     )
+    if activity_type:
+        q = q.filter(Activity.type == activity_type)
 
-    return {"count": count}
+    return {"count": q.scalar()}
 
 
 @router.get("/", response_model=ContactListResponse)
