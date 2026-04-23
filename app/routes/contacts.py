@@ -50,6 +50,7 @@ def list_contacts(
     last_contacted_before: Optional[date] = None,
     never_contacted: Optional[bool] = None,
     # attribute filters
+    company_id: Optional[str] = None,
     zb_status: Optional[str] = None,
     industry: Optional[str] = None,
     seniority_level: Optional[str] = None,
@@ -86,6 +87,8 @@ def list_contacts(
         q = q.filter(last_act_sq.c.last_contacted_at == None)
     if never_contacted is False:
         q = q.filter(last_act_sq.c.last_contacted_at != None)
+    if company_id:
+        q = q.filter(Contact.company_id == company_id)
     if zb_status:
         q = q.filter(Contact.zb_status == zb_status)
     if industry:

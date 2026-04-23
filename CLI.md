@@ -180,6 +180,132 @@ Creates an `Activity(type='email')` record per contact on send.
 
 ---
 
+### `scrape`
+
+Scrape company websites to hydrate missing fields using GPT-4.1-nano for extraction.
+Only fills null fields by default — existing data is never overwritten unless `--force` is passed.
+
+#### `scrape detect-company`
+Detect and save a website URL for a single company that doesn't have one.
+Tries the `domain` field first, then asks GPT. Validates every candidate with a HEAD request before saving.
+
+```bash
+./crm scrape detect-company <company_id>
+./crm scrape detect-company <company_id> --yes   # skip confirmation
+```
+
+#### `scrape detect`
+Batch find websites for all companies that don't have one. Prioritises companies that already have a `domain` or LinkedIn URL.
+
+```bash
+./crm scrape detect --limit 20          # process up to 20 companies
+./crm scrape detect --dry-run           # preview candidates without making requests
+./crm scrape detect --limit 20 --yes    # auto-save without prompting
+```
+
+#### `scrape company`
+Scrape a single company's website and hydrate missing fields. If the company has no website, detection is attempted automatically first.
+
+```bash
+./crm scrape company <company_id>
+./crm scrape company <company_id> --yes      # auto-approve changes
+./crm scrape company <company_id> --force    # overwrite existing values too
+```
+
+#### `scrape run`
+Batch scrape companies, prioritised by most missing fields. Companies without a website have detection attempted automatically before scraping.
+
+```bash
+./crm scrape run                    # top 10 companies with most missing fields
+./crm scrape run --limit 25         # process up to 25
+./crm scrape run --dry-run          # preview queue without any requests
+./crm scrape run --yes              # auto-approve all changes
+./crm scrape run --yes --force      # auto-approve + overwrite existing values
+```
+
+**Fields populated from scraping:**
+
+| Field | Source |
+|---|---|
+| `description` | GPT-written summary from homepage/about content |
+| `phone` | Main office number from contact/about pages |
+| `street_address`, `full_address`, `city`, `state`, `country`, `postal_code` | Address from contact page |
+| `founded_year` | About page |
+| `technologies` | Tech stack mentioned on the site |
+
+**Single-company workflow:**
+```bash
+crm scrape detect-company <id>   # find the website
+crm scrape company <id>          # hydrate fields
+```
+
+---
+
+### `enrich`
+
+Find missing contact information (email, phone, etc.) by scraping company team pages
+and inferring email patterns from colleagues at the same company.
+
+#### `enrich contact`
+Enrich a single contact.
+
+```bash
+./crm enrich contact <contact_id>
+./crm enrich contact <contact_id> --yes      # auto-approve changes
+./crm enrich contact <contact_id> --force    # overwrite existing values too
+```
+
+#### `enrich run`
+Batch enrich contacts missing a specific field. Prioritises contacts whose company has a website.
+
+```bash
+./crm enrich run                          # find emails for up to 20 contacts
+./crm enrich run --limit 50               # process up to 50
+./crm enrich run --missing mobile_number  # target a different field
+./crm enrich run --missing any            # target any missing field
+./crm enrich run --dry-run                # preview candidates without processing
+./crm enrich run --yes                    # auto-approve all changes
+./crm enrich run --yes --force            # auto-approve + overwrite existing values
+```
+
+**How enrichment works for each contact:**
+
+1. **Email pattern inference** (free, instant) — checks if other contacts at the same company already have emails, infers the format (`first.last@`, `flast@`, etc.), and constructs a suggestion. Requires at least one known colleague email.
+2. **Team page scraping** — hits the company's `/team`, `/leadership`, `/people`, `/about` pages, checks if the contact's name appears, then asks GPT to extract any email or phone found near their name.
+
+The diff table shows the proposed value and its source (`pattern` or `scraped`) so you can judge confidence before approving.
+
+---
+
+### `workflow`
+
+Guided, interactive workflows that chain multiple enrichment steps together.
+
+#### `workflow companies`
+Lists all companies sorted by how much they need attention (fewest contacts + most missing fields first), ten at a time. Select a company by number to run the full pipeline for it.
+
+```bash
+./crm workflow companies
+```
+
+**Navigation:**
+| Input | Action |
+|---|---|
+| `1`–`10` | Select company by position on current page |
+| `n` | Next page |
+| `p` | Previous page |
+| `q` | Quit |
+
+**Per-company pipeline (three steps):**
+
+1. **Scrape company details** — hydrates missing fields from the company's website (same as `scrape company`).
+2. **Enrich existing contacts** — finds missing emails/phones for contacts already in the CRM (same as `enrich run` scoped to this company). Asks for confirmation before running.
+3. **Discover new contacts** — scrapes the team page for new people to add (same as `enrich discover-contacts` scoped to this company). Asks for confirmation before running.
+
+The candidate list refreshes after each company is processed so scores stay accurate as you work through the queue.
+
+---
+
 ### `backfill`
 
 One-time commands for data cleanup. Safe to run more than once (idempotent).
@@ -214,6 +340,7 @@ Add to `.env` in the project root (never committed):
 DATABASE_URL=your_db_url_here
 ZEROBOUNCE_API_KEY=your_key_here
 RESEND_API_KEY=your_key_here
+OPENAI_API_KEY=your_key_here
 ```
 
 ---
