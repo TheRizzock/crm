@@ -1,5 +1,5 @@
 import typer
-from cli import validate, send, config, backfill, scrape, enrich, workflow
+from cli import validate, send, config, backfill, scrape, enrich, workflow, email_gen
 import cli.import_leads as import_leads
 
 app = typer.Typer(
@@ -16,6 +16,7 @@ app.add_typer(import_leads.app,  name="import",   help="Import leads from JSON i
 app.add_typer(scrape.app,        name="scrape",   help="Scrape company websites to hydrate missing fields")
 app.add_typer(enrich.app,        name="enrich",   help="Find missing emails, phones and info for contacts")
 app.add_typer(workflow.app,      name="workflow", help="Guided workflows that chain multiple enrichment steps together")
+app.add_typer(email_gen.app,     name="email",    help="AI-assisted email drafting (experimental)")
 
 if __name__ == "__main__":
     app()
