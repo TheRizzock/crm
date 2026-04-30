@@ -3,6 +3,7 @@ from app.routes import lead
 from app.routes import contacts
 from app.routes import companies
 from app.routes import forms
+from app.routes import webhooks
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -26,3 +27,4 @@ app.include_router(lead.router,      prefix="/lead")
 app.include_router(contacts.router,  prefix="/contacts")
 app.include_router(companies.router, prefix="/companies")
 app.include_router(forms.router,     prefix="/form")
+app.include_router(webhooks.router,  prefix="/webhooks")

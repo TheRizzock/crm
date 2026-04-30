@@ -332,6 +332,71 @@ All outreach is tracked as `Activity` records on a contact.
 
 ---
 
+### `sync-resend`
+
+Backfill email statuses from Resend for any `Activity` record still marked `scheduled`.
+Emails start life as `scheduled` when queued via `send schedule` — this pulls the actual
+delivery outcome from Resend and updates the record.
+
+```bash
+python -m cli.sync_resend              # interactive — preview list, pick one or all
+python -m cli.sync_resend --all        # update every null-status activity
+python -m cli.sync_resend --dry-run    # preview what would change, no writes
+python -m cli.sync_resend --limit 200  # cap records inspected (default 500)
+```
+
+Interactive mode shows a table of all null-status emails, then prompts:
+- Enter a row number to update just that one
+- `a` to update all
+- `q` to quit
+
+---
+
+## Webhook setup (Resend → activity status)
+
+Resend fires webhook events when an email is delivered, bounced, opened, or clicked.
+The app receives these at `POST /webhooks/resend` and updates the matching `Activity.status`.
+
+### 1. Add the signing secret
+
+In the Resend dashboard → **Webhooks** → create a new endpoint, copy the **Signing Secret** (`whsec_...`), then add it to `.env`:
+
+```
+RESEND_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxxx
+```
+
+> Without this variable the endpoint still works but skips signature verification — set it before exposing the URL in production.
+
+### 2. Register the endpoint in Resend
+
+Point Resend to your server's public URL:
+
+```
+POST https://<your-domain>/webhooks/resend
+```
+
+Subscribe to these events:
+
+| Event | Maps to `Activity.status` |
+|---|---|
+| `email.sent` | `sent` |
+| `email.delivered` | `delivered` |
+| `email.bounced` | `bounced` |
+| `email.opened` | `opened` |
+| `email.clicked` | `clicked` |
+| `email.complained` | `bounced` |
+
+### 3. Backfill historical sends
+
+Run the sync script to catch up on emails sent before the webhook was active:
+
+```bash
+python -m cli.sync_resend --dry-run   # preview
+python -m cli.sync_resend --all       # apply
+```
+
+---
+
 ## Environment variables
 
 Add to `.env` in the project root (never committed):
@@ -340,6 +405,7 @@ Add to `.env` in the project root (never committed):
 DATABASE_URL=your_db_url_here
 ZEROBOUNCE_API_KEY=your_key_here
 RESEND_API_KEY=your_key_here
+RESEND_WEBHOOK_SECRET=whsec_your_signing_secret_here
 OPENAI_API_KEY=your_key_here
 ```
 
