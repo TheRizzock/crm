@@ -8,7 +8,7 @@ from fastapi import APIRouter, Request, HTTPException, Depends
 from sqlalchemy.orm import Session
 
 from app.db import SessionLocal
-from app.models import Activity
+from app.models import Activity, Contact
 
 router = APIRouter()
 
@@ -81,6 +81,10 @@ async def resend_webhook(request: Request, db: Session = Depends(get_db)):
     activity = db.query(Activity).filter(Activity.resend_id == resend_id).first()
     if activity:
         activity.status = status
+        if status == "bounced" and activity.contact_id:
+            contact = db.query(Contact).filter(Contact.id == activity.contact_id).first()
+            if contact:
+                contact.do_not_email = True
         db.commit()
 
     return {"ok": True}

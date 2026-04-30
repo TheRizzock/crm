@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime, Text, ForeignKey
+from sqlalchemy import Column, String, DateTime, Text, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.db import Base
@@ -62,6 +62,8 @@ class Contact(Base):
     city = Column(String)
     state = Column(String)
     country = Column(String)
+
+    do_not_email = Column(Boolean, default=False)
 
     # zerobounce
     zb_status = Column(String)

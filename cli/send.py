@@ -36,9 +36,17 @@ SENDABLE_ZB = {"valid", "catch-all"}
 # ── helpers ───────────────────────────────────────────────────────────────────
 
 def _sendable_contacts(db, days_since: int | None = None) -> list[Contact]:
+    bounced_sq = (
+        db.query(Activity.contact_id)
+        .filter(Activity.type == "email", Activity.status == "bounced")
+        .subquery()
+    )
+
     q = db.query(Contact).filter(
         Contact.email.isnot(None),
         Contact.zb_status.in_(SENDABLE_ZB),
+        Contact.do_not_email.isnot(True),
+        ~exists().where(Contact.id == bounced_sq.c.contact_id),
     )
 
     if days_since is not None:

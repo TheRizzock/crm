@@ -70,6 +70,8 @@ def _apply(act: Activity, db, dry_run: bool, delay: float = 0.0) -> str | None:
     if status:
         if not dry_run:
             act.status = status
+            if status == "bounced" and act.contact:
+                act.contact.do_not_email = True
         return status
     return None
 
