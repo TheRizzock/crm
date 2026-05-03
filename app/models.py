@@ -105,3 +105,14 @@ class EmailCapture(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
+class ContactFormSubmission(Base):
+    __tablename__ = "contact_form_submission"
+
+    id = Column(String, primary_key=True, default=gen_id)
+    name = Column(String)
+    email = Column(String, index=True)
+    subject = Column(String)
+    message = Column(Text)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
